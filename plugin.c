@@ -26,16 +26,16 @@ struct opentsdb_node {
 static int opentsdb_add_metric(struct uwsgi_buffer *ub, struct uwsgi_stats_pusher_instance *uspi, time_t now, char *metric, size_t metric_len, int64_t value) {
 	struct opentsdb_node *on = (struct opentsdb_node *) uspi->data;
 	// reset the buffer
-	if (uwsgi_buffer_append(ub, "put ", 4)) return -1;	
+	if (uwsgi_buffer_append(ub, "put ", 4)) return -1;
 	if (uwsgi_buffer_append(ub, metric, metric_len)) return -1;
 	if (uwsgi_buffer_append(ub, " ", 1)) return -1;
-        if (uwsgi_buffer_num64(ub, now)) return -1;
+	if (uwsgi_buffer_num64(ub, now)) return -1;
 	if (uwsgi_buffer_append(ub, " ", 1)) return -1;
-        if (uwsgi_buffer_num64(ub, value)) return -1;
+	if (uwsgi_buffer_num64(ub, value)) return -1;
 	if (uwsgi_buffer_append(ub, " ", 1)) return -1;
 	if (uwsgi_buffer_append(ub, on->tags, on->tags_len)) return -1;
 	if (uwsgi_buffer_append(ub, "\n", 1)) return -1;
-        return 0;
+	return 0;
 }
 
 
@@ -86,13 +86,12 @@ end:
 }
 
 static void opentsdb_init(void) {
-        struct uwsgi_stats_pusher *usp = uwsgi_register_stats_pusher("opentsdb", stats_pusher_opentsdb);
+	struct uwsgi_stats_pusher *usp = uwsgi_register_stats_pusher("opentsdb", stats_pusher_opentsdb);
 	// we use a custom format not the JSON one
 	usp->raw = 1;
 }
 
 struct uwsgi_plugin opentsdb_plugin = {
-        .name = "opentsdb",
-        .on_load = opentsdb_init,
+	.name = "opentsdb",
+	.on_load = opentsdb_init,
 };
-
